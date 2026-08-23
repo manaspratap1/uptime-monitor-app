@@ -2,8 +2,10 @@ package com.org.uptime_monitor.service;
 
 import com.org.uptime_monitor.dto.EndpointRequestDTO;
 import com.org.uptime_monitor.entity.Endpoint;
+import com.org.uptime_monitor.exception.EndpointAlreadyExistsException;
 import com.org.uptime_monitor.repository.EndpointRepository;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.sqs.endpoints.internal.Value;
 
@@ -21,7 +23,15 @@ public class EndpointService {
     }
 
     public Endpoint registerEndpoint(EndpointRequestDTO request) {
+
+        if (endpointRepository.existsByUrl(request.getUrl())) {
+            throw new EndpointAlreadyExistsException(
+                    "This URL is already being monitored for the email: " + request.getAlertEmail()
+            );
+        }
+
         Endpoint newEndpoint = new Endpoint(request.getUrl(), request.getAlertEmail());
+
         return endpointRepository.save(newEndpoint);
     }
 

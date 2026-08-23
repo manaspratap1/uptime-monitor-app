@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EndpointRepository extends JpaRepository<Endpoint, Long> {
+
+    boolean existsByUrl(String url);
 }
