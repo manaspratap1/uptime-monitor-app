@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/endpoints")
+@CrossOrigin(origins = "*")
 public class EndpointController {
 
     private final EndpointService endpointService;
