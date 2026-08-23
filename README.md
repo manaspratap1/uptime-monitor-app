@@ -39,13 +39,34 @@ A cloud-native, event-driven backend system designed to monitor the availability
   "url": "[https://example.com](https://example.com)",
   "alertEmail": "devops-lead@company.com"
 }
+```
 
-Response: 200 OK (or 429 Too Many Requests if exceeded)
+## API Endpoints
+
+### 1. Register Endpoint for Monitoring
+
+- **POST** `/api/endpoints`
+- **Rate Limit:** 5 requests / minute per IP
+
+```json
+{
+  "url": "https://example.com",
+  "alertEmail": "devops-lead@company.com"
+}
+```
+
+**Response:** `200 OK` or `429 Too Many Requests` if the rate limit is exceeded.
 
 ### 2. Fetch Cached Endpoint Status
-* **GET** /api/endpoints/{id}/status
 
-* **Response:** UP | DOWN | PENDING (Served directly from Redis cache)
+- **GET** `/api/endpoints/{id}/status`
+
+**Response:** `UP` | `DOWN` | `PENDING`
+
+Served directly from the Redis cache, with PostgreSQL as the fallback on a cache miss.
+
+---
+
 ## Local Development & Setup
 
 ### Prerequisites
@@ -56,10 +77,14 @@ Response: 200 OK (or 429 Too Many Requests if exceeded)
 ### 1. Clone & Start Full Stack
 
 ```bash
-git clone https://github.com/<your-username>/distributed-uptime-monitor.git
-cd distributed-uptime-monitor
+git clone https://github.com/manaspratap1/uptime-monitor-app.git
+cd uptime-monitor-app
 docker-compose up --build -d
-2. Initialize Local AWS Infrastructure (LocalStack)
+```
+
+### 2. Initialize Local AWS Infrastructure (LocalStack)
+
+```bash
 docker exec -it uptime_localstack awslocal sqs create-queue \
   --queue-name uptime-check-queue \
   --region ap-south-1
@@ -67,19 +92,38 @@ docker exec -it uptime_localstack awslocal sqs create-queue \
 docker exec -it uptime_localstack awslocal sns create-topic \
   --name uptime-alerts \
   --region ap-south-1
-3. Verify Application Logs
-docker logs -f uptime_monitor_app
-4. Verify Running Containers
+```
+
+### 3. Verify Running Containers
+
+```bash
 docker ps
+```
 
 You should see the following containers:
 
-uptime_monitor_app
-uptime_postgres
-uptime_redis
-uptime_localstack
-5. Stop the Full Stack
+- `uptime_monitor_app`
+- `uptime_postgres`
+- `uptime_redis`
+- `uptime_localstack`
+
+### 4. Verify Application Logs
+
+```bash
+docker logs -f uptime_monitor_app
+```
+
+### 5. Stop the Full Stack
+
+```bash
 docker-compose down
-6. Rebuild After Code Changes
+```
+
+### 6. Rebuild After Code Changes
+
+```bash
 docker-compose down
 docker-compose up --build -d
+```
+
+---
