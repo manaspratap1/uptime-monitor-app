@@ -39,3 +39,47 @@ A cloud-native, event-driven backend system designed to monitor the availability
   "url": "[https://example.com](https://example.com)",
   "alertEmail": "devops-lead@company.com"
 }
+
+Response: 200 OK (or 429 Too Many Requests if exceeded)
+
+### 2. Fetch Cached Endpoint Status
+* **GET** /api/endpoints/{id}/status
+
+* **Response:** UP | DOWN | PENDING (Served directly from Redis cache)
+## Local Development & Setup
+
+### Prerequisites
+
+- Docker & Docker Compose
+- Java 17 & Maven
+
+### 1. Clone & Start Full Stack
+
+```bash
+git clone https://github.com/<your-username>/distributed-uptime-monitor.git
+cd distributed-uptime-monitor
+docker-compose up --build -d
+2. Initialize Local AWS Infrastructure (LocalStack)
+docker exec -it uptime_localstack awslocal sqs create-queue \
+  --queue-name uptime-check-queue \
+  --region ap-south-1
+
+docker exec -it uptime_localstack awslocal sns create-topic \
+  --name uptime-alerts \
+  --region ap-south-1
+3. Verify Application Logs
+docker logs -f uptime_monitor_app
+4. Verify Running Containers
+docker ps
+
+You should see the following containers:
+
+uptime_monitor_app
+uptime_postgres
+uptime_redis
+uptime_localstack
+5. Stop the Full Stack
+docker-compose down
+6. Rebuild After Code Changes
+docker-compose down
+docker-compose up --build -d
