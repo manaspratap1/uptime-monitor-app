@@ -22,9 +22,7 @@ public class UptimeWorker {
     private final RedisTemplate<String, String> redisTemplate;
     private final SnsTemplate snsTemplate;
 
-//    private static final String SNS_TOPIC_ARN = "arn:aws:sns:ap-south-1:000000000000:uptime-alerts";
-
-    private static final String SNS_TOPIC_ARN = "uptime-alerts";
+    private static final String SNS_TOPIC_ARN = "arn:aws:sns:ap-southeast-2:284443069026:uptime-alerts";
 
     public UptimeWorker(EndpointRepository endpointRepository,
                         RestTemplate restTemplate,
