@@ -1,6 +1,7 @@
 package com.org.uptime_monitor.service;
 
 import com.org.uptime_monitor.dto.EndpointRequestDTO;
+import com.org.uptime_monitor.dto.UserEndpointsSummaryDTO;
 import com.org.uptime_monitor.entity.Endpoint;
 import com.org.uptime_monitor.exception.EndpointAlreadyExistsException;
 import com.org.uptime_monitor.repository.EndpointRepository;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.sqs.endpoints.internal.Value;
 
 import java.time.Duration;
+import java.util.List;
 
 @Service
 public class EndpointService {
@@ -44,11 +46,15 @@ public class EndpointService {
             return cachedStatus;
         }
 
-        System.out.println("Cache MISS for endpoint ID: " + id + ". Querying DB...");
         Endpoint endpoint = endpointRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Endpoint not found"));
 
         redisTemplate.opsForValue().set(cacheKey, endpoint.getStatus(), Duration.ofMinutes(5));
         return endpoint.getStatus();
+    }
+
+    public UserEndpointsSummaryDTO getEndpointsByEmail(String email) {
+        List<Endpoint> endpoints = endpointRepository.findByAlertEmailIgnoreCase(email);
+        return new UserEndpointsSummaryDTO(email, endpoints.size(), endpoints);
     }
 }

@@ -1,6 +1,7 @@
 package com.org.uptime_monitor.controller;
 
 import com.org.uptime_monitor.dto.EndpointRequestDTO;
+import com.org.uptime_monitor.dto.UserEndpointsSummaryDTO;
 import com.org.uptime_monitor.entity.Endpoint;
 import com.org.uptime_monitor.service.EndpointService;
 import org.springframework.http.ResponseEntity;
@@ -27,4 +28,11 @@ public class EndpointController {
     public ResponseEntity<String> getStatus(@PathVariable Long id) {
         return ResponseEntity.ok(endpointService.getEndpointStatus(id));
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<UserEndpointsSummaryDTO> searchByEmail(@RequestParam String email) {
+        UserEndpointsSummaryDTO summary = endpointService.getEndpointsByEmail(email);
+        return ResponseEntity.ok(summary);
+    }
+
 }
