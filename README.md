@@ -32,18 +32,6 @@ A cloud-native, event-driven backend system designed to monitor the availability
 ## API Endpoints
 
 ### 1. Register Endpoint for Monitoring
-* **POST** `/api/endpoints`
-* **Rate Limit:** 5 requests / minute per IP
-```json
-{
-  "url": "[https://example.com](https://example.com)",
-  "alertEmail": "devops-lead@company.com"
-}
-```
-
-## API Endpoints
-
-### 1. Register Endpoint for Monitoring
 
 - **POST** `/api/endpoints`
 - **Rate Limit:** 5 requests / minute per IP
