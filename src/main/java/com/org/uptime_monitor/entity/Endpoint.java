@@ -22,6 +22,12 @@ public class Endpoint {
 
     private LocalDateTime lastChecked;
 
+    @Column(name = "last_alert_sent_at")
+    private LocalDateTime lastAlertSentAt;
+
+    @Column(name = "alert_interval_minutes")
+    private Integer alertIntervalMinutes = 180;
+
     public Endpoint() {}
 
     public Endpoint(String url, String alertEmail) {
@@ -44,4 +50,20 @@ public class Endpoint {
 
     public LocalDateTime getLastChecked() { return lastChecked; }
     public void setLastChecked(LocalDateTime lastChecked) { this.lastChecked = lastChecked; }
+
+    public LocalDateTime getLastAlertSentAt() {
+        return lastAlertSentAt;
+    }
+
+    public Integer getAlertIntervalMinutes() {
+        return alertIntervalMinutes;
+    }
+
+    public void setLastAlertSentAt(LocalDateTime lastAlertSentAt) {
+        this.lastAlertSentAt = lastAlertSentAt;
+    }
+
+    public void setAlertIntervalMinutes(Integer alertIntervalMinutes) {
+        this.alertIntervalMinutes = alertIntervalMinutes;
+    }
 }

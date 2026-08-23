@@ -13,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Component
 public class UptimeWorker {
@@ -47,13 +48,40 @@ public class UptimeWorker {
             newStatus = "DOWN";
         }
 
+        // --- NEW COOLDOWN & STATE TRANSITION LOGIC ---
+        boolean shouldAlert = false;
+
         if ("DOWN".equals(newStatus)) {
+            if (!"DOWN".equals(endpoint.getStatus())) {
+                // Case 1: Website just went down from UP/PENDING
+                shouldAlert = true;
+            } else if (endpoint.getLastAlertSentAt() != null) {
+                // Case 2: Already down, check if cooldown period has passed
+                long minutesSinceLastAlert = ChronoUnit.MINUTES.between(
+                        endpoint.getLastAlertSentAt(),
+                        LocalDateTime.now()
+                );
+
+                int interval = endpoint.getAlertIntervalMinutes() != null ? endpoint.getAlertIntervalMinutes() : 180;
+                if (minutesSinceLastAlert >= interval) {
+                    shouldAlert = true;
+                }
+            } else {
+                shouldAlert = true;
+            }
+        }
+
+        if (shouldAlert) {
             String alertMessage = String.format("URGENT: Your monitored endpoint %s is currently DOWN! Alert sent to %s.",
                     task.getUrl(), endpoint.getAlertEmail());
 
             snsTemplate.convertAndSend(SNS_TOPIC_ARN, alertMessage);
             System.out.println("🚨 AWS SNS Alert Published for: " + task.getUrl());
+
+            // Update the last alert timestamp
+            endpoint.setLastAlertSentAt(LocalDateTime.now());
         }
+        // ---------------------------------------------
 
         endpoint.setStatus(newStatus);
         endpoint.setLastChecked(LocalDateTime.now());
