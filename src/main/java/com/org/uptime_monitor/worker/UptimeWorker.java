@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 
 @Component
 public class UptimeWorker {
@@ -40,7 +41,12 @@ public class UptimeWorker {
     @SqsListener("uptime-check-queue")
     public void processCheck(TaskMessageDTO task) {
         Endpoint endpoint = endpointRepository.findById(task.getEndpointId())
-                .orElseThrow(() -> new RuntimeException("Endpoint not found in DB"));
+                .orElse(null);
+
+        if (endpoint == null) {
+            System.out.println("Skipping uptime check because endpoint {} no longer exists");
+            return;
+        }
 
         String newStatus;
         try {
