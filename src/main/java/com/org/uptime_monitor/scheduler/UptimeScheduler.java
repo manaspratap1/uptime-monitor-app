@@ -24,8 +24,6 @@ public class UptimeScheduler {
 
     @Scheduled(fixedRate = 60000)
     public void dispatchChecks() {
-        System.out.println("Cron triggered: Fetching endpoints from DB...");
-
         List<Endpoint> endpoints = endpointRepository.findAll();
 
         for (Endpoint endpoint : endpoints) {
@@ -35,8 +33,6 @@ public class UptimeScheduler {
                     .queue(QUEUE_NAME)
                     .payload(task)
             );
-
-            System.out.println("Queued check for: " + endpoint.getUrl());
         }
     }
 }

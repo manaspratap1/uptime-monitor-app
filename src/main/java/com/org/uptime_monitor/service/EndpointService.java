@@ -6,9 +6,7 @@ import com.org.uptime_monitor.entity.Endpoint;
 import com.org.uptime_monitor.exception.EndpointAlreadyExistsException;
 import com.org.uptime_monitor.repository.EndpointRepository;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import software.amazon.awssdk.services.sqs.endpoints.internal.Value;
 
 import java.time.Duration;
 import java.util.List;
@@ -42,7 +40,6 @@ public class EndpointService {
 
         String cachedStatus = redisTemplate.opsForValue().get(cacheKey);
         if (cachedStatus != null) {
-            System.out.println("Cache HIT for endpoint ID: " + id);
             return cachedStatus;
         }
 

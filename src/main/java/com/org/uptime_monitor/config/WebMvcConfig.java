@@ -16,7 +16,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        // Apply the rate limiter strictly to the POST route for URL registration
         registry.addInterceptor(rateLimitInterceptor)
                 .addPathPatterns("/api/endpoints");
     }

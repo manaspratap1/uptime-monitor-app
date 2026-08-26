@@ -3,7 +3,7 @@ server:
 
 spring:
   config:
-    import: optional:file:.env.properties
+    import: optional:file:.env.properties.properties
   datasource:
     url: ${DATABASE_URL}
     username: ${DATABASE_USERNAME}
@@ -27,3 +27,7 @@ spring:
         secret-key: ${AWS_SECRET_ACCESS_KEY}
       sqs:
         queue-not-found-strategy: fail
+
+  aws:
+    sns:
+      topic-arn: ${SNS_TOPIC_ARN}

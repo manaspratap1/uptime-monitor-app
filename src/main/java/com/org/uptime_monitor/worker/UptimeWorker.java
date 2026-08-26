@@ -5,6 +5,7 @@ import com.org.uptime_monitor.entity.Endpoint;
 import com.org.uptime_monitor.repository.EndpointRepository;
 import io.awspring.cloud.sns.core.SnsTemplate;
 import io.awspring.cloud.sqs.annotation.SqsListener;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,8 @@ public class UptimeWorker {
     private final RedisTemplate<String, String> redisTemplate;
     private final SnsTemplate snsTemplate;
 
-    private static final String SNS_TOPIC_ARN = "arn:aws:sns:ap-southeast-2:284443069026:uptime-alerts";
+    @Value("${aws.sns.topic-arn}")
+    private String snsTopicArn;
 
     public UptimeWorker(EndpointRepository endpointRepository,
                         RestTemplate restTemplate,
@@ -48,15 +50,12 @@ public class UptimeWorker {
             newStatus = "DOWN";
         }
 
-        // --- NEW COOLDOWN & STATE TRANSITION LOGIC ---
         boolean shouldAlert = false;
 
         if ("DOWN".equals(newStatus)) {
             if (!"DOWN".equals(endpoint.getStatus())) {
-                // Case 1: Website just went down from UP/PENDING
                 shouldAlert = true;
             } else if (endpoint.getLastAlertSentAt() != null) {
-                // Case 2: Already down, check if cooldown period has passed
                 long minutesSinceLastAlert = ChronoUnit.MINUTES.between(
                         endpoint.getLastAlertSentAt(),
                         LocalDateTime.now()
@@ -75,13 +74,10 @@ public class UptimeWorker {
             String alertMessage = String.format("URGENT: Your monitored endpoint %s is currently DOWN! Alert sent to %s.",
                     task.getUrl(), endpoint.getAlertEmail());
 
-            snsTemplate.convertAndSend(SNS_TOPIC_ARN, alertMessage);
-            System.out.println("🚨 AWS SNS Alert Published for: " + task.getUrl());
+            snsTemplate.convertAndSend(snsTopicArn, alertMessage);
 
-            // Update the last alert timestamp
             endpoint.setLastAlertSentAt(LocalDateTime.now());
         }
-        // ---------------------------------------------
 
         endpoint.setStatus(newStatus);
         endpoint.setLastChecked(LocalDateTime.now());
@@ -90,6 +86,6 @@ public class UptimeWorker {
         String cacheKey = "endpoint:" + endpoint.getId() + ":status";
         redisTemplate.opsForValue().set(cacheKey, newStatus, Duration.ofMinutes(5));
 
-        System.out.println("Status updated to " + newStatus + " for " + task.getUrl());
+//        System.out.println("Status updated to " + newStatus + " for " + task.getUrl());
     }
 }

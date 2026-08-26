@@ -8,7 +8,7 @@ services:
       - "4566:4566"
     environment:
       - SERVICES=sqs,sns
-      - DEFAULT_REGION=ap-south-1
+      - DEFAULT_REGION=us-east-1
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - LOCALSTACK_AUTH_TOKEN=${LOCALSTACK_AUTH_TOKEN}
@@ -43,3 +43,10 @@ services:
       - SPRING_DATA_REDIS_HOST=uptime-redis
       - SPRING_CLOUD_AWS_SQS_ENDPOINT=http://uptime-localstack:4566
       - SPRING_CLOUD_AWS_SNS_ENDPOINT=http://uptime-localstack:4566
+      - AWS_REGION=us-east-1
+      - SNS_TOPIC_ARN=arn:aws:sns:us-east-1:000000000000:uptime-alerts
+      - DATABASE_USERNAME=admin
+      - DATABASE_PASSWORD=rootpassword
+      - REDIS_HOST=uptime-redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=
