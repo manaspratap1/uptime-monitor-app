@@ -40,3 +40,12 @@ spring:
         secret-key: ${AWS_SECRET_ACCESS_KEY}
       sqs:
         queue-not-found-strategy: fail
+
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: health,info,prometheus
+    endpoint:
+      health:
+        show-details: never
