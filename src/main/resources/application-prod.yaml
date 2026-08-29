@@ -41,11 +41,11 @@ spring:
       sqs:
         queue-not-found-strategy: fail
 
-  management:
-    endpoints:
-      web:
-        exposure:
-          include: health,info,prometheus
-    endpoint:
-      health:
-        show-details: never
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      show-details: never
