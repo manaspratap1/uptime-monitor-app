@@ -3,7 +3,20 @@ server:
 
 spring:
   config:
-    import: optional:file:.env.properties.properties
+    import: optional:file:.env.properties
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_APP_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
   datasource:
     url: ${DATABASE_URL}
     username: ${DATABASE_USERNAME}
@@ -27,7 +40,3 @@ spring:
         secret-key: ${AWS_SECRET_ACCESS_KEY}
       sqs:
         queue-not-found-strategy: fail
-
-  aws:
-    sns:
-      topic-arn: ${SNS_TOPIC_ARN}

@@ -26,7 +26,7 @@ public class EndpointService {
 
         if (endpointRepository.existsByUrl(request.getUrl())) {
             throw new EndpointAlreadyExistsException(
-                    "This URL is already being monitored for the email: " + request.getAlertEmail()
+                    "This URL is already being monitored"
             );
         }
 
