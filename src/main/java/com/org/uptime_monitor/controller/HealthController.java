@@ -3,6 +3,7 @@ package com.org.uptime_monitor.controller;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -65,5 +66,18 @@ public class HealthController {
             """;
 
         return ResponseEntity.ok(html);
+    }
+
+    @GetMapping("/cpu-test")
+    public ResponseEntity<Long> cpuTest(
+            @RequestParam(defaultValue = "100000000") long iterations) {
+
+        long result = 0;
+
+        for (long i = 0; i < iterations; i++) {
+            result += i * i;
+        }
+
+        return ResponseEntity.ok(result);
     }
 }
