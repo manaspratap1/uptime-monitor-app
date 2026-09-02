@@ -7,6 +7,8 @@ A cloud-native, event-driven backend system designed to monitor the availability
 ## High-Level Architecture
 
 <img width="4296" height="4715" alt="image" src="https://github.com/user-attachments/assets/e848ee06-63e5-4c78-af95-3d8405ae0577" />
+<img width="787" height="686" alt="image" src="https://github.com/user-attachments/assets/f4172025-c3c9-478c-b3b1-76fe8f80e9b7" />
+
 
 
 ---
