@@ -31,8 +31,13 @@ spring:
     hibernate:
       ddl-auto: update
   data:
-  redis:
-    url: ${REDIS_URL}
+    redis:
+      host: ${REDIS_HOST}
+      username: ${REDIS_USERNAME:default}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD:}
+      ssl:
+        enabled: true
   cloud:
     aws:
       region:
