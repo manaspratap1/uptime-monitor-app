@@ -13,6 +13,9 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final Logger log =
+        LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     @ExceptionHandler(EndpointAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleEndpointAlreadyExists(EndpointAlreadyExistsException ex) {
         ErrorResponse response = new ErrorResponse("Conflict", ex.getMessage());
@@ -37,6 +40,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
+        log.error("Unexpected exception occurred while processing request", ex);
         ErrorResponse response = new ErrorResponse("Internal Server Error", "An unexpected error occurred");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
