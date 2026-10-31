@@ -75,11 +75,11 @@ docker-compose up --build -d
 ### 2. Initialize Local AWS Infrastructure (LocalStack)
 
 ```bash
-docker exec -it uptime_localstack awslocal sqs create-queue \
+docker exec -it uptime-localstack awslocal sqs create-queue \
   --queue-name uptime-check-queue \
   --region ap-south-1
 
-docker exec -it uptime_localstack awslocal sns create-topic \
+docker exec -it uptime-localstack awslocal sns create-topic \
   --name uptime-alerts \
   --region ap-south-1
 ```
@@ -92,15 +92,15 @@ docker ps
 
 You should see the following containers:
 
-- `uptime_monitor_app`
-- `uptime_postgres`
-- `uptime_redis`
-- `uptime_localstack`
+- `uptime-app`
+- `uptime-postgres`
+- `uptime-redis`
+- `uptime-localstack`
 
 ### 4. Verify Application Logs
 
 ```bash
-docker logs -f uptime_monitor_app
+docker logs -f uptime-app
 ```
 
 ### 5. Stop the Full Stack

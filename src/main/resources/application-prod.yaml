@@ -1,11 +1,11 @@
 server:
-  port: 8001
+  port: ${PORT:8001}
   tomcat:
     threads:
-      max: 1000
+      max: 200
       min-spare: 20
     accept-count: 1000
-    max-connections: 10000
+    max-connections: 2000
 
 spring:
   config:
@@ -14,7 +14,7 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${MAIL_USERNAME}
+    username: ${MAIL_FROM}
     password: ${MAIL_APP_PASSWORD}
     properties:
       mail:
@@ -40,7 +40,7 @@ spring:
   cloud:
     aws:
       region:
-        static: ap-southeast-2
+        static: ${AWS_REGION:ap-southeast-2}
       credentials:
         access-key: ${AWS_ACCESS_KEY_ID}
         secret-key: ${AWS_SECRET_ACCESS_KEY}
